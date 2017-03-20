@@ -1,0 +1,26 @@
+#!/bin/bash
+
+devpath="/dev/"
+poolname="rdbTest"
+tmpfile="/tmp/showmapped.out"
+
+rm -f $tmpfile
+rbd showmapped > $tmpfile
+
+res="$( awk 'BEGIN { FS=" - " } /rbdTest/ {print $2}' ${tmpfile} )"
+sorted="$( echo $res | sort -t rbd -k 2 -g )"
+echo ${sorted}
+
+declare -a devarray=()
+for dev in $res; do
+#  tmp1=$( readlink $iscsidev )
+  tmp1=$dev
+#  tmp2=$( basename $tmp1 )
+  tmp2=$tmp1
+#  devarray=("${devarray[@]}" "${devpath}${tmp2}")
+  devarray=("${devarray[@]}" "${tmp2}")
+done
+
+echo ${devarray[@]}
+rm -f $tmpfile
+

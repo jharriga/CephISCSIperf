@@ -1,0 +1,15 @@
+#!/bin/bash
+
+devpath="/dev/mapper/"
+mpath_glob="/dev/mapper/mpath*"
+
+declare -a devarray=()
+for iscsidev in $mpath_glob; do
+#  tmp1=$( readlink $iscsidev )
+  tmp1=$iscsidev
+  tmp2=$( basename $tmp1 )
+  devarray=("${devarray[@]}" "${devpath}${tmp2}")
+done
+
+echo ${devarray[@]}
+

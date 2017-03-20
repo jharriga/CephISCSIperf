@@ -1,0 +1,10 @@
+#!/bin/bash
+# USAGE: cat login_iscsi.script | ssh gprfc093
+
+gw1ip="10.1.0.89" 
+gw2ip="10.1.0.90" 
+
+iscsiadm -m discovery -t st -p ${gw1ip} -I p3p1 -P 1
+iscsiadm -m node -p ${gw1ip} -I p3p1 -l
+iscsiadm -m node -p ${gw2ip} -I p3p1 -l
+

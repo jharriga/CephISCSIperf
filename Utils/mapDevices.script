@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# USAGE: cat mapDevices.script | ssh remote-host
+#
+# maps rbd images on the remote-host
+# run this as root from the CBT head-node
+##################################################
+devcnt=60         # how many devices per pool
+poolname_list="rbdTest"
+
+for poolname in ${poolname_list}; do
+    tmp_devlist=""
+    for (( i=1; i<=$devcnt; i++ )); do
+      img_name="${poolname}-${i}"
+      tmp_devlist+="$(rbd --pool $poolname map -o noshare ${img_name})"
+      tmp_devlist+=" ; "
+    done
+    # echo syntax strips off final char (comma)
+    echo "${basename} = ${tmp_devlist%?}"
+done
+echo "+++++++++++++++++++++"; rbd showmapped
+echo "Done"
+

@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+# USAGE: cat unmapDevices.script | ssh remote-host
+#
+# unmaps rbd images on the remote-host
+# run this as root from the CBT head-node
+##################################################
+devcnt=60         # how many devices per pool
+poolname_list="rbdTest cbtTest"
+
+for poolname in ${poolname_list}; do
+    tmp_devlist=""
+    for (( i=1; i<=$devcnt; i++ )); do
+      img_name="${poolname}-${i}"
+#      img_name="cbtRBD-${i}"
+      tmp_devlist+="$(rbd --pool $poolname unmap ${img_name})"
+      tmp_devlist+=" ; "
+    done
+done
+echo "+++++++++++++++++++++"; rbd showmapped
+echo "Done"
+
